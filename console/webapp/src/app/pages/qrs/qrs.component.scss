@@ -1,0 +1,54 @@
+.content {
+  padding-top: 20px;
+}
+.optionSelected {
+  margin-left: 10px;
+  font-weight: bold;
+}
+.mat-slider {
+  width: 200px;
+  height: 18px;
+}
+.numQrs {
+  width: 45px;
+}
+.nextPrevStep {
+  margin-top: 35px;
+}
+.nextPrevStep button {
+  margin-right: 15px;
+}
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+}
+.mat-radio-button {
+  margin-bottom: 10px;
+}
+.desc {
+  font-size: 12px;
+}
+.configurePrint {
+  display: flex;
+  flex-direction: column;
+}
+.configurePrint .mat-slider {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.printConfigureSize {
+  width: 50px;
+  margin-right: 3px;
+}
+.qrPrint {
+  margin: 10px;
+  border: 1px solid black !important;
+  float: left;
+}
+.mat-icon {
+  padding-right: 10px;
+}
+.buttonPrint {
+  margin-bottom: 15px;
+}

@@ -1,0 +1,11 @@
+<app-loading></app-loading>
+<div *ngIf="!editing">
+  <ng-template *ngTemplateOutlet="noEditingContent"></ng-template>
+</div>
+<div *ngIf="editing">
+  <ng-template *ngTemplateOutlet="editingContent"></ng-template>
+<mat-card-actions>
+  <button mat-raised-button type="submit" class="saveButton" color="primary" (click)="saveEvent.emit()" [disabled]="!canSaveChanges"><mat-icon>done</mat-icon>Save changes</button>
+  <button mat-raised-button type="button" color="warn" (click)="cancelEvent.emit()"><mat-icon>close</mat-icon>Discard changes</button>
+</mat-card-actions>
+</div>

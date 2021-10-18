@@ -1,0 +1,12 @@
+<app-item>
+  <ng-template #noEditingContent>
+    <div class="noEditingText">{{item.text}}</div>
+  </ng-template>
+  <ng-template #editingContent>
+      <form [formGroup]="formGroup">
+        <mat-form-field class="text">
+          <input matInput placeholder="Text" formControlName="text" autofocus required/>
+        </mat-form-field>
+      </form>
+  </ng-template>
+</app-item>

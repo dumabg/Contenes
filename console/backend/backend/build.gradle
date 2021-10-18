@@ -1,0 +1,70 @@
+apply plugin: 'kotlin'
+apply plugin: 'war'                               // standard Web Archive plugin
+apply plugin: 'com.google.cloud.tools.appengine'  // App Engine tasks
+
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation files('..\\..\\..\\libs\\backend\\GCDUtils\\build\\libs\\GCDUtils-1.0-SNAPSHOT.jar')
+    implementation files('..\\..\\..\\libs\\backend\\BackendFramework\\build\\libs\\BackendFramework-1.0-SNAPSHOT.jar')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "com.google.appengine:appengine-api-1.0-sdk:$gae_version"
+    implementation "io.ktor:ktor-server-servlet:$ktor_version"
+
+    implementation "io.ktor:ktor-auth:$ktor_version"
+    implementation "io.ktor:ktor-auth-jwt:$ktor_version"
+    implementation "io.ktor:ktor-gson:$ktor_version"
+
+    //logging
+    //https://ktor.io/servers/logging.html
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    //https://cloud.google.com/logging/docs/setup/java#wzxhzdk57wzxhzdk58logback_appender_for_product_name
+    //implementation "com.google.cloud:google-cloud-logging-logback:$stackdriver_version"
+
+    // Google cloud
+    compile "com.google.cloud:google-cloud-datastore:$cloud_datastore_version"
+    //implementation "io.ktor:ktor-html-builder:$ktor_version"
+
+    //https://www.concretepage.com/build-tools/gradle/gradle-compile-providedcompile-example
+    //providedCompile is also a configuration in gradle script, which enables any JAR and its transitive dependency not to go in WAR archive but be available at compile time
+    providedCompile "javax.servlet:javax.servlet-api:$servlet_version"
+
+//    testImplementation 'junit:junit:4.12'
+//    testImplementation 'com.google.truth:truth:0.33'
+//    testImplementation 'org.mockito:mockito-all:1.10.19'
+    testImplementation "com.google.appengine:appengine-testing:$gae_version"
+    testImplementation "com.google.appengine:appengine-api-stubs:$gae_version"
+    testImplementation "com.google.appengine:appengine-tools-sdk:$gae_version"
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"
+}
+
+appengine {  // App Engine tasks configuration
+    run {
+        environment = ["DATASTORE_EMULATOR_HOST" : "localhost:8081",
+                       "DATASTORE_USE_PROJECT_ID_AS_APP_ID" : "true",
+                       "DATASTORE_PROJECT_ID" : "augdim"]
+        host="0.0.0.0"
+        automaticRestart = true
+        jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=7000']
+        port = 7070
+    }
+    deploy {
+        version = "1.0"
+        projectId = "augdim"
+    }
+}
+
+task localDataStoreStart {
+    doLast {
+        ProcessBuilder pb = new ProcessBuilder('cmd', '/C', 'start', "${appengine.tools.cloudSdkHome}/bin/gcloud",
+                'beta', 'emulators', 'datastore', 'start', "--data-dir=${project.projectDir}\\..\\..\\..\\datastore\\local_db.bin")
+        pb.start()
+    }
+}
+
+sourceCompatibility = 1.8     // App Engine uses Java 8
+targetCompatibility = 1.8     // App Engine uses Java 8

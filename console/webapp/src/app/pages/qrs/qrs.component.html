@@ -1,0 +1,78 @@
+<app-loading></app-loading>
+<div>
+  <form [formGroup]="formGroup">
+<mat-vertical-stepper [linear]="true" #stepper>
+  <mat-step [stepControl]="formGroup">
+      <ng-template matStepLabel>How many QR codes do you want? <span *ngIf="stepper.selectedIndex > 0" class="optionSelected">{{numQrs.value}}</span></ng-template>
+      <div class="content">
+        <mat-slider #slider min="1" max="100" step="1" thumbLabel
+          (input)="formGroup.get('numQrs').setValue(slider.value)"></mat-slider>
+        <mat-form-field class="numQrs">
+        <input #numQrs type="number" min="1" max="100" matInput step="1"
+              formControlName="numQrs" (change)="slider.value = numQrs.value">
+        </mat-form-field>
+        <div class="nextPrevStep">
+          <button mat-raised-button matStepperNext type="button">Next <mat-icon class="material-icons-outlined">keyboard_arrow_right</mat-icon></button>
+        </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="formGroup">
+      <ng-template matStepLabel>Print or download? <span *ngIf="stepper.selectedIndex > 1" class="optionSelected">{{ (formGroup.get('outputType').value === "1") ? 'Download' : 'Print'}}</span></ng-template>
+      <div class="content">
+      <mat-radio-group #outputType class="radioGroup" formControlName="outputType">
+        <mat-radio-button value="1">Download.<br/><span class="desc">Download a zip file containing the QR codes like a SVG files.</span></mat-radio-button>
+        <mat-radio-button value="2">Print.<br/><span class="desc">Generate the QR codes and print them.</span></mat-radio-button>
+      </mat-radio-group>
+      <div class="nextPrevStep">
+        <button mat-raised-button matStepperPrevious type="button"><mat-icon class="material-icons-outlined">keyboard_arrow_left</mat-icon> Back</button>
+        <button mat-raised-button matStepperNext type="button">Next <mat-icon class="material-icons-outlined">keyboard_arrow_right</mat-icon></button>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Configure <span *ngIf="stepper.selectedIndex > 2" class="optionSelected">
+      {{ (formGroup.get('outputType').value === "1") ? formGroup.get('fileName').value : formGroup.get('printConfigureSize').value + " cm"}}</span></ng-template>
+      <div class="content">
+    <div *ngIf="stepper.selectedIndex === 2">
+      <div *ngIf="formGroup.get('outputType').value === '1'">
+        <mat-form-field>
+          <input matInput placeholder="File name" formControlName="fileName">
+        </mat-form-field>
+      </div>
+      <div class="configurePrint" *ngIf="formGroup.get('outputType').value === '2'">
+        <mat-slider #sliderConfigure min="1" max="100" step="0.1" thumbLabel (input)="formGroup.get('printConfigureSize').setValue(sliderConfigure.value)"
+          value="{{formGroup.get('printConfigureSize').value}}"></mat-slider>
+        <div>
+        <mat-form-field class="printConfigureSize">
+          <input #printConfigureSize type="number" min="1" max="100" step="0.1" matInput
+              formControlName="printConfigureSize" (change)="sliderConfigure.value = printConfigureSize.value">
+        </mat-form-field>cm
+        </div>
+        <div #qrConfiguration [style.width.cm]="formGroup.get('printConfigureSize').value" [style.height.cm]="formGroup.get('printConfigureSize').value"></div>
+      </div>
+    </div>
+    <div class="nextPrevStep">
+      <button mat-raised-button matStepperPrevious type="button"><mat-icon class="material-icons-outlined">keyboard_arrow_left</mat-icon> Back</button>
+      <button mat-raised-button matStepperNext type="button">Next <mat-icon class="material-icons-outlined">keyboard_arrow_right</mat-icon></button>
+    </div>
+  </div>
+</mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <div class="content">
+    <div *ngIf="stepper.selectedIndex === 3">
+      <div *ngIf="formGroup.get('outputType').value === '1'">
+          <button mat-raised-button (click)="save()"><mat-icon class="material-icons-outlined">get_app</mat-icon>Download</button>
+      </div>
+      <div *ngIf="formGroup.get('outputType').value === '2'">
+        <button mat-raised-button type="button" class="buttonPrint" ngxPrint printSectionId="print-section" [useExistingCss]="true"><mat-icon class="material-icons-outlined">print</mat-icon>Print</button>
+        <div id="print-section">
+          <div *ngFor="let i of counter(formGroup.get('numQrs').value)" class="qrPrint" #qrPrint [style.width.cm]="formGroup.get('printConfigureSize').value" [style.height.cm]="formGroup.get('printConfigureSize').value"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </mat-step>
+</mat-vertical-stepper>
+</form>
+</div>

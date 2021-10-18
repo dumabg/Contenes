@@ -1,0 +1,8 @@
+<form>
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="value" name="value" [readonly]="!editing">
+    <button *ngIf="!editing" matSuffix mat-icon-button (click)='edit()'><mat-icon class="material-icons-outlined">edit</mat-icon></button>
+    <button *ngIf="editing" matSuffix mat-icon-button (click)='save()' disabled="{{!value.length}}"><mat-icon>done</mat-icon></button>
+    <button *ngIf="editing" matSuffix mat-icon-button (click)='cancel()'><mat-icon>close</mat-icon></button>
+  </mat-form-field>
+</form>

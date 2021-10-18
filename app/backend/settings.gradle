@@ -1,0 +1,6 @@
+rootProject.name = 'Augdim.App.backend'
+include ':backend'
+
+
+
+

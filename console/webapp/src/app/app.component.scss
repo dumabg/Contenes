@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+.items {
+  padding: 20px;
+}
+.selected {
+  background-color: lightgray;
+}
+.mat-drawer-container {
+  width: 100%;
+  flex-grow : 1;
+}
+.mat-drawer-content {
+  padding: 20px;
+}
